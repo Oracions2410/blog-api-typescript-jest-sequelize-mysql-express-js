@@ -6,6 +6,7 @@ if (process.env.NODE_ENV !== "production") {
 
 import * as http from "http";
 import app from "./app";
+import { sequelize } from "./models";
 
 import * as iconvLite from "iconv-lite";
 
@@ -26,6 +27,16 @@ server.listen(port, () => {
     console.log(`Listening at http://localhost:${port}/api/v1`);
   }
 });
+
+//------------------------------------------
+async function dbInit() {
+  await sequelize.sync();
+}
+
+if (process.env.NODE_ENV !== "test") {
+  dbInit();
+}
+//------------------------------------------
 
 server.on("error", (error: any, port: number) => {
   if (error.syscall !== "listen") {
